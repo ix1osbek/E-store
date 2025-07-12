@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { AuthModule } from './auth/auth.module';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [ConfigModule.forRoot({envFilePath: '.env' , isGlobal: true}),
@@ -13,7 +15,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
             database: process.env.DB_NAME,
             entities: [__dirname + '/**/*.entity{.ts,.js}'],
             synchronize: true,
-      })
+      }),
+      AuthModule,
+      EmailModule
   ],
   controllers: [],
   providers: [],
