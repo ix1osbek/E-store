@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { AuthModule } from './auth/auth.module';
 import { EmailModule } from './email/email.module';
+import { Auth } from './auth/entities/auth.entity'
 
 @Module({
   imports: [ConfigModule.forRoot({envFilePath: '.env' , isGlobal: true}),
@@ -13,7 +14,7 @@ import { EmailModule } from './email/email.module';
             username: process.env.DB_USERNAME,
             password: process.env.DB_PASSWORD,
             database: process.env.DB_NAME,
-            entities: [__dirname + '/**/*.entity{.ts,.js}'],
+            entities: [Auth],
             synchronize: true,
       }),
       AuthModule,
