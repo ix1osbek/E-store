@@ -141,9 +141,11 @@ export class AuthService {
             });
 
             const newAccessToken = this.jwtService.sign(
-                { sub: payload.sub, email: payload.email, role: payload.role },
-                { secret: process.env.JWT_ACCESS_SECRET, expiresIn: '15m' }
-            );
+                { id: payload.id, email: payload.email, role: payload.role }, 
+                {
+                    secret: process.env.JWT_ACCESS_SECRET,
+                    expiresIn: '15m',
+                });
 
             return { accessToken: newAccessToken };
         } catch (error) {

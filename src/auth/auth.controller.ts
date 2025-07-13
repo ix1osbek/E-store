@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, Req, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Res, Req, Put } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { VerifyOtpDto } from './dto/verify_otp.dto';
@@ -7,6 +7,12 @@ import { Request, Response } from 'express';
 import { UpdateAuthRoleDto } from './dto/update-authRole.dto';
 import { SendResetDto } from './dto/send-reset.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { UseGuards } from '@nestjs/common';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { Role } from './role.enum';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from 'src/common/guards/roles.guard';
+
 
 
 @ApiTags('Auth')
@@ -71,6 +77,9 @@ export class AuthController {
 
 
     @Get('all')
+    @UseGuards(AuthGuard("jwt"), RolesGuard)
+    @Roles(Role.SUPERADMIN)
+    @ApiOperation({ summary: 'Faqat superadmin huquqi bor!' })
     @ApiOperation({ summary: 'Barcha foydalanuvchilarni olish' })
     @ApiResponse({ status: 200, description: 'Foydalanuvchilar ro‘yxati' })
     @ApiResponse({ status: 404, description: 'Foydalanuvchilar topilmadi' })
@@ -81,12 +90,19 @@ export class AuthController {
 
 
     @Put(':id/role')
-    @ApiOperation({ summary: 'Foydalanuvchining rolini yangilash' })
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
+    @Roles(Role.SUPERADMIN)
+    @ApiOperation({ summary: 'Foydalanuvchining rolini yangilash (faqat superadmin)' })
     @ApiResponse({ status: 200, description: 'Foydalanuvchining roli yangilandi' })
+    @ApiResponse({ status: 403, description: 'Ruxsat yo‘q (superadmin emas)' })
     @ApiResponse({ status: 404, description: 'Foydalanuvchi topilmadi' })
-    async updateUserRole(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthRoleDto) {
+    async updateUserRole(
+        @Param('id') id: string,
+        @Body() updateAuthDto: UpdateAuthRoleDto,
+    ) {
         return this.authService.updateUserRole(id, updateAuthDto);
     }
+
 
     @Post('forgot_password')
     @ApiOperation({ summary: 'Parolni tiklash uchun kod yuborish' })
