@@ -22,6 +22,11 @@ export class CreateGamingDto {
     @IsNotEmpty({ message: "O'yinlar maydoni bo'sh bo'lishi mumkin emas!" })
     includedGames: string;
 
+    @ApiProperty({ example: "image_url" })
+    @IsNotEmpty({ message: "Image maydoni bo'sh bo'lmasligi kerak!" })
+    img: string;
+
     @ApiProperty({ example: "skmefim-sdfmweomowmof" })
+    @IsNotEmpty({ message: "Category ID maydoni bo'sh bo'lmasligi kerak!" })
     categoryId: string;
 }

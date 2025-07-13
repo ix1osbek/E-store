@@ -26,6 +26,11 @@ export class CreateComputerDto {
     @IsNotEmpty({ message: "GPU maydoni bo'sh bo'lishi mumkin emas!" })
     gpu: string;
 
+    @ApiProperty({ example: "image_url" })
+    @IsNotEmpty({ message: "Image maydoni bo'sh bo'lmasligi kerak!" })
+    img: string;
+
     @ApiProperty({ example: "skmefim-sdfmweomowmof" })
+    @IsNotEmpty({ message: "Category ID maydoni bo'sh bo'lmasligi kerak!" })
     categoryId: string;
 }
