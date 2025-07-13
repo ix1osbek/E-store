@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { VerifyOtpDto } from './dto/verify_otp.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Response } from 'express';
 
 
 @ApiTags('Auth')
@@ -27,5 +28,15 @@ export class AuthController {
     async verifyOtp(@Body() verifyOtpDto: VerifyOtpDto) {
         await this.authService.verifyOtp(verifyOtpDto.email, verifyOtpDto.otp);
         return { message: "Email manzilingiz tasdiqlandi!" };
+    }
+
+    @Post("login")
+    @ApiOperation({summary: "Foydalanuvchini tizimga kirishi"})
+    @ApiResponse({ status: 200, description: 'Foydalanuvchi tizimga kirdi' })
+    @ApiResponse({ status: 401, description: 'Noto‘g‘ri email yoki parol' })
+    @ApiResponse({ status: 404, description: 'Foydalanuvchi topilmadi' })
+    @ApiResponse({ status: 500, description: 'Serverda xato yuz berdi' })
+    async login(@Body() dto: CreateAuthDto, @Res({ passthrough: true }) res: Response) {
+        return this.authService.login(dto, res)
     }
 }

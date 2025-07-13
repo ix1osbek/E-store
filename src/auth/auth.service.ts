@@ -1,17 +1,21 @@
-import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { ConflictException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto'
 import { InjectRepository } from '@nestjs/typeorm';
 import { Auth } from './entities/auth.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { EmailService } from 'src/email/email.service'
+import { JwtService } from '@nestjs/jwt';
+import { Role } from './role.enum';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
     private otpStore = new Map<string, string>();
     constructor(@InjectRepository(Auth)
     private readonly authRepository: Repository<Auth>,
-        private readonly emailService: EmailService
+        private readonly emailService: EmailService,
+        private readonly jwtService: JwtService,
     ) { }
 
     //////////// register
@@ -63,6 +67,62 @@ export class AuthService {
             return { message: "Email manzilingiz tasdiqlandi!" };
         } catch (error) {
             if (error instanceof ConflictException) throw error
+            throw new InternalServerErrorException('Serverda xato yuz berdi');
+        }
+    }
+
+
+    ///////////// login
+    async login(loginDto: CreateAuthDto, res: Response) {
+        try {
+            const { email, password } = loginDto
+            const user = await this.authRepository.findOne({ where: { email } })
+            if (!user) {
+                throw new UnauthorizedException('Email yoki parol xato!');
+            }
+
+            const isMatch = await bcrypt.compare(password, user.password)
+            if (!isMatch) {
+                throw new UnauthorizedException('Email yoki parol xato!');
+            }
+
+            if (!user.isVerified) {
+                throw new UnauthorizedException('Email manzili tasdiqlanmagan!')
+            }
+
+            //////////// JWT yaratish
+            const payload = { id: user.id, email: user.email, role: user.role }
+            ///// access token 
+            const accessToken = this.jwtService.sign(payload, {
+                secret: process.env.JWT_ACCESS_SECRET,
+                expiresIn: '15m',
+            })
+
+            ///// refresh token
+            const refreshToken = this.jwtService.sign(payload, {
+                secret: process.env.JWT_REFRESH_SECRET,
+                expiresIn: '7d',
+            })
+
+            //////////// Refresh tokenni cookiega saqlash
+            res.cookie("refreshToken", refreshToken, {
+                httpOnly: true,
+                secure: true, // productionda true
+                sameSite: 'strict',
+                maxAge: 7 * 24 * 60 * 60 * 1000, 
+            })
+
+
+            return {
+                accessToken,
+                user: {
+                    id: user.id,
+                    email: user.email,
+                    role: user.role
+                }
+            }
+        } catch (error) {
+            if (error instanceof UnauthorizedException) throw error
             throw new InternalServerErrorException('Serverda xato yuz berdi');
         }
     }

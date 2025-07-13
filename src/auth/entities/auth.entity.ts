@@ -21,6 +21,5 @@ export class Auth {
     otpTime: Date;
 
     @Column({ type: 'enum', enum: Role, default: Role.USER })
-    role: Role;
-
+    role: Role
 }
