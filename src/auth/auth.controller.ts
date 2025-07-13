@@ -49,4 +49,14 @@ export class AuthController {
     async refresh(@Body('refreshToken') refreshToken: string, @Res({ passthrough: true }) req: Request) {
         return this.authService.refreshToken(refreshToken, req);
     }
+
+    @Post('logout')
+    @ApiOperation({ summary: 'Foydalanuvchini tizimdan chiqishi' })
+    @ApiResponse({ status: 200, description: 'Foydalanuvchi tizimdan chiqdi' })
+    @ApiResponse({ status: 500, description: 'Serverda xato yuz berdi' })
+    async logout(@Res({ passthrough: true }) res: Response) {
+        res.clearCookie('refresh_token');
+        return { message: 'Tizimdan chiqildi' };
+    }
+
 }
