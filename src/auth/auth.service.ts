@@ -8,6 +8,7 @@ import { EmailService } from 'src/email/email.service'
 import { JwtService } from '@nestjs/jwt';
 import { Role } from './role.enum';
 import { Request, Response } from 'express';
+import { UpdateAuthRoleDto } from './dto/update-authRole.dto';
 
 @Injectable()
 export class AuthService {
@@ -110,7 +111,7 @@ export class AuthService {
                 secure: false, // HTTPSda true
                 sameSite: 'strict',
                 maxAge: 7 * 24 * 60 * 60 * 1000,
-                path: '/', 
+                path: '/',
             })
             return {
                 accessToken,
@@ -165,6 +166,30 @@ export class AuthService {
                 role: user.role
             }));
 
+        } catch (error) {
+            if (error instanceof NotFoundException) throw error;
+            throw new InternalServerErrorException('Serverda xato yuz berdi')
+        }
+    }
+
+
+    ///////////// add admin
+    async updateUserRole(id: string, updateAuthDto: UpdateAuthRoleDto) {
+        try {
+            const user = await this.authRepository.findOne({ where: { id } })
+            if (!user) {
+                throw new NotFoundException("Foydalanuvchi topilmadi!")
+            }
+            const { role } = updateAuthDto;
+            user.role = role;
+            await this.authRepository.save(user);
+            return {
+                message: "Foydalanuvchi roli yangilandi!", user: {
+                    id: user.id,
+                    email: user.email,
+                    role: user.role
+                }
+            };
         } catch (error) {
             if (error instanceof NotFoundException) throw error;
             throw new InternalServerErrorException('Serverda xato yuz berdi')

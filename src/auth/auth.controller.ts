@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, Req, Put } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { VerifyOtpDto } from './dto/verify_otp.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
+import { UpdateAuthRoleDto } from './dto/update-authRole.dto';
 
 
 @ApiTags('Auth')
@@ -75,4 +76,13 @@ export class AuthController {
     async getAllUsers() {
         return this.authService.getAllUsers();
     }
-}
+
+
+    @Put(':id/role')
+    @ApiOperation({ summary: 'Foydalanuvchining rolini yangilash' })
+    @ApiResponse({ status: 200, description: 'Foydalanuvchining roli yangilandi' })
+    @ApiResponse({ status: 404, description: 'Foydalanuvchi topilmadi' })
+    async updateUserRole(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthRoleDto) {
+        return this.authService.updateUserRole(id, updateAuthDto);
+    }}
+    
