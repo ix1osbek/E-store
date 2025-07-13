@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto'
 import { InjectRepository } from '@nestjs/typeorm';
 import { Auth } from './entities/auth.entity';
@@ -105,14 +105,13 @@ export class AuthService {
             })
 
             //////////// Refresh tokenni cookiega saqlash
-            res.cookie("refreshToken", refreshToken, {
+            res.cookie("refresh_token", refreshToken, {
                 httpOnly: true,
-                secure: true, // productionda true
+                secure: false, // HTTPSda true
                 sameSite: 'strict',
                 maxAge: 7 * 24 * 60 * 60 * 1000,
+                path: '/', 
             })
-
-
             return {
                 accessToken,
                 user: {
@@ -129,22 +128,46 @@ export class AuthService {
 
 
     //////////// refresh token
-    async refreshToken(refreshToken: string, req: Request) {
-        const token = req.cookies['refresh_token'];;
-        if (!token) throw new UnauthorizedException('Refresh token noto‘g‘ri!')
+    async refreshToken(req: Request) {
+        const token = req.cookies['refresh_token'];
+        if (!token) throw new UnauthorizedException('Refresh token topilmadi!');
+
         try {
-            const payload = this.jwtService.verify(refreshToken, {
+            const payload = this.jwtService.verify(token, {
                 secret: process.env.JWT_REFRESH_SECRET,
             });
 
             const newAccessToken = this.jwtService.sign(
                 { sub: payload.sub, email: payload.email, role: payload.role },
                 { secret: process.env.JWT_ACCESS_SECRET, expiresIn: '15m' }
-            )
+            );
+
             return { accessToken: newAccessToken };
         } catch (error) {
-            if (error instanceof UnauthorizedException) throw error;
-            throw new InternalServerErrorException('Serverda xato yuz berdi');
+            throw new UnauthorizedException('Refresh token yaroqsiz!');
+        }
+    }
+
+
+
+    //////////// get all users
+
+    async getAllUsers() {
+        try {
+            const users = await this.authRepository.find();
+            if (!users || users.length === 0) {
+                throw new NotFoundException("Foydalanuvchilar topilmadi!");
+            }
+            return users.map(user => ({
+                id: user.id,
+                email: user.email,
+                isVerified: user.isVerified,
+                role: user.role
+            }));
+
+        } catch (error) {
+            if (error instanceof NotFoundException) throw error;
+            throw new InternalServerErrorException('Serverda xato yuz berdi')
         }
     }
 }

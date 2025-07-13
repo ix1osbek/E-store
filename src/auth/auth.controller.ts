@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { VerifyOtpDto } from './dto/verify_otp.dto';
@@ -46,8 +46,8 @@ export class AuthController {
     @ApiResponse({ status: 200, description: 'Token yangilandi' })
     @ApiResponse({ status: 401, description: 'Token noto‘g‘ri' })
     @ApiResponse({ status: 500, description: 'Serverda xato yuz berdi' })
-    async refresh(@Body('refreshToken') refreshToken: string, @Res({ passthrough: true }) req: Request) {
-        return this.authService.refreshToken(refreshToken, req);
+    async refresh(@Req() req: Request) {
+        return this.authService.refreshToken(req);
     }
 
     @Post('logout')
@@ -55,8 +55,24 @@ export class AuthController {
     @ApiResponse({ status: 200, description: 'Foydalanuvchi tizimdan chiqdi' })
     @ApiResponse({ status: 500, description: 'Serverda xato yuz berdi' })
     async logout(@Res({ passthrough: true }) res: Response) {
-        res.clearCookie('refresh_token');
+        res.clearCookie('refresh_token', {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'strict',
+            path: '/', 
+        });
+
         return { message: 'Tizimdan chiqildi' };
     }
 
+
+
+    @Get('all')
+    @ApiOperation({ summary: 'Barcha foydalanuvchilarni olish' })
+    @ApiResponse({ status: 200, description: 'Foydalanuvchilar ro‘yxati' })
+    @ApiResponse({ status: 404, description: 'Foydalanuvchilar topilmadi' })
+    @ApiResponse({ status: 500, description: 'Serverda xato yuz berdi' })
+    async getAllUsers() {
+        return this.authService.getAllUsers();
+    }
 }
