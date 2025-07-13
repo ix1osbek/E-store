@@ -7,7 +7,7 @@ import * as bcrypt from 'bcrypt';
 import { EmailService } from 'src/email/email.service'
 import { JwtService } from '@nestjs/jwt';
 import { Role } from './role.enum';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -109,7 +109,7 @@ export class AuthService {
                 httpOnly: true,
                 secure: true, // productionda true
                 sameSite: 'strict',
-                maxAge: 7 * 24 * 60 * 60 * 1000, 
+                maxAge: 7 * 24 * 60 * 60 * 1000,
             })
 
 
@@ -123,6 +123,27 @@ export class AuthService {
             }
         } catch (error) {
             if (error instanceof UnauthorizedException) throw error
+            throw new InternalServerErrorException('Serverda xato yuz berdi');
+        }
+    }
+
+
+    //////////// refresh token
+    async refreshToken(refreshToken: string, req: Request) {
+        const token = req.cookies['refresh_token'];;
+        if (!token) throw new UnauthorizedException('Refresh token noto‘g‘ri!')
+        try {
+            const payload = this.jwtService.verify(refreshToken, {
+                secret: process.env.JWT_REFRESH_SECRET,
+            });
+
+            const newAccessToken = this.jwtService.sign(
+                { sub: payload.sub, email: payload.email, role: payload.role },
+                { secret: process.env.JWT_ACCESS_SECRET, expiresIn: '15m' }
+            )
+            return { accessToken: newAccessToken };
+        } catch (error) {
+            if (error instanceof UnauthorizedException) throw error;
             throw new InternalServerErrorException('Serverda xato yuz berdi');
         }
     }

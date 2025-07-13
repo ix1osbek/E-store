@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { VerifyOtpDto } from './dto/verify_otp.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
 
 @ApiTags('Auth')
@@ -31,12 +31,22 @@ export class AuthController {
     }
 
     @Post("login")
-    @ApiOperation({summary: "Foydalanuvchini tizimga kirishi"})
+    @ApiOperation({ summary: "Foydalanuvchini tizimga kirishi" })
     @ApiResponse({ status: 200, description: 'Foydalanuvchi tizimga kirdi' })
     @ApiResponse({ status: 401, description: 'Noto‘g‘ri email yoki parol' })
     @ApiResponse({ status: 404, description: 'Foydalanuvchi topilmadi' })
     @ApiResponse({ status: 500, description: 'Serverda xato yuz berdi' })
     async login(@Body() dto: CreateAuthDto, @Res({ passthrough: true }) res: Response) {
         return this.authService.login(dto, res)
+    }
+
+
+    @Post("refresh")
+    @ApiOperation({ summary: 'Tokenni yangilash' })
+    @ApiResponse({ status: 200, description: 'Token yangilandi' })
+    @ApiResponse({ status: 401, description: 'Token noto‘g‘ri' })
+    @ApiResponse({ status: 500, description: 'Serverda xato yuz berdi' })
+    async refresh(@Body('refreshToken') refreshToken: string, @Res({ passthrough: true }) req: Request) {
+        return this.authService.refreshToken(refreshToken, req);
     }
 }
