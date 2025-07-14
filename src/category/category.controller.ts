@@ -59,8 +59,18 @@ export class CategoryController {
         return this.categoryService.update(id, updateCategoryDto);
     }
 
-    @Delete(':id')
+    @Delete(':id/delete')
+    @UseGuards(AuthGuard("jwt"), RolesGuard)
+    @Roles(Role.SUPERADMIN, Role.ADMIN)
+    @ApiOperation({ summary: 'Kategoriya ID bo‘yicha o‘chirish' })
+    @ApiOperation({ summary: 'Faqat superadmin va admin huquqi bor!' })
+    @ApiResponse({ status: 200, description: 'Kategoriya muvaffaqiyatli o‘chirildi' })
+    @ApiResponse({ status: 404, description: 'Kategoriya topilmadi' })
+    @ApiResponse({ status: 500, description: 'Serverda xato yuz berdi' })
+    @ApiResponse({ status: 400, description: 'Noto‘g‘ri so‘rov' })
+    @ApiResponse({ status: 409, description: 'Ushbu nomdagi kategoriya mavjud!' })
+    @ApiResponse({ status: 401, description: 'Ruxsat etilmagan' })
     remove(@Param('id') id: string) {
-        return this.categoryService.remove(+id);
+        return this.categoryService.remove(id);
     }
 }

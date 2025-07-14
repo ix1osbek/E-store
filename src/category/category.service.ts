@@ -65,7 +65,7 @@ export class CategoryService {
         }
     }
 
-    async remove(id: number) {
+    async remove(id: string) {
         try {
             const category = await this.categoryRepository.findOne({ where: { id: id.toString() } });
             if (!category) {
