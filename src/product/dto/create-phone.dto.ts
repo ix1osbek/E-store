@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsString, IsNotEmpty, IsNumber, IsOptional, IsArray } from 'class-validator';
 
 export class CreatePhoneDto {
     @ApiProperty({ example: "iPhone 13" })
@@ -26,8 +26,9 @@ export class CreatePhoneDto {
     color: string;
 
     @ApiProperty({ example: "image_url" })
-    @IsString()
-    image: string;
+    @IsOptional()
+    @IsArray()
+    image: string[];
 
     @ApiProperty({ example: "A15 Bionic" })
     @IsString()

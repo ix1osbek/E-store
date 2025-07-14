@@ -21,9 +21,9 @@ export class Headphone {
     @Column()
     color: string;
 
-
-    @Column()
-    img: string; 
+    @Column("text", { array: true, nullable: true })
+    img: string[];
+    
     @ManyToOne(() => Category, { eager: true, onDelete: 'SET NULL' })
     category: Category;
 }
