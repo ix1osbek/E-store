@@ -1,26 +1,36 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity, PrimaryGeneratedColumn, Column,
+  ManyToOne, JoinColumn
+} from 'typeorm';
 import { Category } from '../../category/entities/category.entity';
 
 @Entity()
 export class Camera {
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column()
-    name: string;
+  @Column()
+  name: string;
 
-    @Column('decimal')
-    price: number;
+  @Column('decimal')
+  price: number;
 
-    @Column()
-    resolution: string; // Masalan: "64MP"
+  @Column()
+  resolution: string;
 
-    @Column()
-    lensType: string; // Masalan: "Wide-angle"
+  @Column()
+  lensType: string;
 
-    @Column()
-    img: string; // Rasm URL yoki fayl nomi
+  @Column()
+  img: string;
 
-    @ManyToOne(() => Category, { eager: true, onDelete: 'SET NULL' })
-    category: Category;
+  @Column({ nullable: true })
+  categoryId: string;
+
+  @ManyToOne(() => Category, category => category.cameras, {
+    eager: true,
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn({ name: 'categoryId' })
+  category: Category;
 }

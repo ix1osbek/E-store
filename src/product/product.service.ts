@@ -1,26 +1,54 @@
-import { Injectable } from '@nestjs/common';
-import { CreateGamingDto } from './dto/create-gaming.dto';
+import { ConflictException, Injectable } from '@nestjs/common'
 import { CreateComputerDto } from './dto/create-computer.dto';
+import { Repository } from 'typeorm';
+import { Phone } from './entities/phone.entity';
+import { InjectRepository } from '@nestjs/typeorm'
+import { CreatePhoneDto } from './dto/create-phone.dto';
+import { UploadService } from '../upload/upload.service';
 
 @Injectable()
 export class ProductService {
-  create(createGamingDto: CreateGamingDto) {
-    return 'This action adds a new product';
-  }
+    constructor(
+        @InjectRepository(Phone)
+        private readonly phoneRepository: Repository<Phone>,
+        private readonly uploadService: UploadService,
+    ) { }
+    async createPhone(createPhoneDto: CreatePhoneDto, files: Express.Multer.File[]) {
+        try {
+            const phone = await this.phoneRepository.findOne({ where: { model: createPhoneDto.model } });
+            if (phone) {
+                throw new ConflictException("Ushbu modeldagi telefon mavjud!");
+            }
 
-  findAll() {
-    return `This action returns all product`;
-  }
+            let imageUrls: string[] = [];
+            if (files && files.length > 0) {
+                imageUrls = await this.uploadService.uploadAndGetUrls(files);
+            }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
-  }
+            const newPhone = this.phoneRepository.create({
+                ...createPhoneDto,
+                image: imageUrls.join(',')
+            });
+            return await this.phoneRepository.save(newPhone)
+        } catch (error) {
+            if (error instanceof ConflictException) throw error;
+            throw new Error('Serverda xato yuz berdi');
+        }
+    }
 
-  update(id: number, updateProductDto: CreateComputerDto) {
-    return `This action updates a #${id} product`;
-  }
+    findAll() {
+        return `This action returns all product`;
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
-  }
+    findOne(id: number) {
+        return `This action returns a #${id} product`;
+    }
+
+    update(id: number, updateProductDto: CreateComputerDto) {
+        return `This action updates a #${id} product`;
+    }
+
+    remove(id: number) {
+        return `This action removes a #${id} product`;
+    }
 }

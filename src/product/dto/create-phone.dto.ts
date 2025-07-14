@@ -23,12 +23,7 @@ export class CreatePhoneDto {
 
     @ApiProperty({ example: "Black" })
     @IsString()
-    color: string;
-
-    @ApiProperty({ example: "image_url" })
-    @IsOptional()
-    @IsArray()
-    image: string[];
+    color: string
 
     @ApiProperty({ example: "A15 Bionic" })
     @IsString()

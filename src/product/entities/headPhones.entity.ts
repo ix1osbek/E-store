@@ -1,29 +1,39 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity, PrimaryGeneratedColumn, Column,
+  ManyToOne, JoinColumn
+} from 'typeorm';
 import { Category } from '../../category/entities/category.entity';
 
 @Entity()
 export class Headphone {
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column()
-    name: string;
+  @Column()
+  name: string;
 
-    @Column('decimal', { precision: 10, scale: 2 })
-    price: number;
+  @Column('decimal', { precision: 10, scale: 2 })
+  price: number;
 
-    @Column()
-    brand: string;
+  @Column()
+  brand: string;
 
-    @Column()
-    wireless: boolean;
+  @Column()
+  wireless: boolean;
 
-    @Column()
-    color: string;
+  @Column()
+  color: string;
 
-    @Column("text", { array: true, nullable: true })
-    img: string[];
-    
-    @ManyToOne(() => Category, { eager: true, onDelete: 'SET NULL' })
-    category: Category;
+  @Column('text', { array: true, nullable: true })
+  img: string[];
+
+  @Column({ nullable: true })
+  categoryId: string;
+
+  @ManyToOne(() => Category, category => category.headphones, {
+    eager: true,
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn({ name: 'categoryId' })
+  category: Category;
 }

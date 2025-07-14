@@ -13,6 +13,7 @@ import { Computer } from './product/entities/computer.entity';
 import { Camera } from './product/entities/camera.entity';
 import { Headphone } from './product/entities/headPhones.entity';
 import { Gaming } from './product/entities/gaming.entity';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [ConfigModule.forRoot({envFilePath: '.env' , isGlobal: true}),
@@ -29,7 +30,8 @@ import { Gaming } from './product/entities/gaming.entity';
       AuthModule,
       EmailModule,
       CategoryModule,
-      ProductModule
+      ProductModule,
+      UploadModule
   ],
   controllers: [],
   providers: [],

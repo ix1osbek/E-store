@@ -1,47 +1,57 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity, PrimaryGeneratedColumn, Column,
+  ManyToOne, JoinColumn
+} from 'typeorm';
 import { Category } from '../../category/entities/category.entity';
 
 @Entity()
 export class Phone {
-    @PrimaryGeneratedColumn('uuid')
-    id: string
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column({ unique: true })
-    model: string
+  @Column({ unique: true })
+  model: string;
 
-    @Column()
-    title: string;
+  @Column()
+  title: string;
 
-    @Column()
-    description: string;
+  @Column()
+  description: string;
 
-    @Column()
-    memory: string
+  @Column()
+  memory: string;
 
-    @Column()
-    color: string;
+  @Column()
+  color: string;
 
-    @Column()
-    image: string;
+  @Column()
+  image: string;
 
-    @Column()
-    cpu: string;
+  @Column()
+  cpu: string;
 
-    @Column()
-    screen_size: string;
+  @Column()
+  screen_size: string;
 
-    @Column()
-    battery: string;
+  @Column()
+  battery: string;
 
-    @Column()
-    front_camera: string;
+  @Column()
+  front_camera: string;
 
-    @Column()
-    main_camera: string;
+  @Column()
+  main_camera: string;
 
-    @Column("decimal")
-    price: number;
+  @Column('decimal')
+  price: number;
 
-    @ManyToOne(() => Category, { eager: true, onDelete: 'SET NULL' })
-    category: Category;
+  @Column({ nullable: true })
+  categoryId: string; // ✅ kerak
+
+  @ManyToOne(() => Category, category => category.phones, {
+    eager: true,
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn({ name: 'categoryId' })
+  category: Category;
 }

@@ -1,29 +1,39 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity, PrimaryGeneratedColumn, Column,
+  ManyToOne, JoinColumn
+} from 'typeorm';
 import { Category } from '../../category/entities/category.entity';
 
 @Entity()
 export class Gaming {
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column()
-    name: string;
+  @Column()
+  name: string;
 
-    @Column('decimal', { precision: 10, scale: 2 })
-    price: number;
+  @Column('decimal', { precision: 10, scale: 2 })
+  price: number;
 
-    @Column()
-    platform: string; // masalan: "PlayStation 5"
+  @Column()
+  platform: string;
 
-    @Column()
-    storage: string; // masalan: "1TB"
+  @Column()
+  storage: string;
 
-    @Column()
-    includedGames: string; // masalan: "FIFA 24, GTA V"
+  @Column()
+  includedGames: string;
 
-    @Column()
-    img: string; // o'yin uchun rasm URL
+  @Column()
+  img: string;
 
-    @ManyToOne(() => Category, { eager: true, onDelete: 'SET NULL' })
-    category: Category;
+  @Column({ nullable: true })
+  categoryId: string;
+
+  @ManyToOne(() => Category, category => category.gamings, {
+    eager: true,
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn({ name: 'categoryId' })
+  category: Category;
 }

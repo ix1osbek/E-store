@@ -39,17 +39,23 @@ export class CategoryService {
     }
 
     async findOne(id: string) {
-        try {
-            const category = await this.categoryRepository.findOne({ where: { id: id.toString() } });
-            if (!category) {
-                throw new NotFoundException(`Kategoriya #${id} topilmadi`);
-            }
-            return category;
-        } catch (error) {
-            if (error instanceof NotFoundException) throw error
-            throw new InternalServerErrorException('Serverda xato yuz berdi');
-        }
+  try {
+    const category = await this.categoryRepository.findOne({
+      where: { id: id.toString() },
+      relations: ['phones', 'computers', 'cameras', 'headphones', 'watches', 'gamings'],
+    });
+
+    if (!category) {
+      throw new NotFoundException(`Kategoriya #${id} topilmadi`);
     }
+
+    return category;
+  } catch (error) {
+    if (error instanceof NotFoundException) throw error;
+    throw new InternalServerErrorException('Serverda xato yuz berdi');
+  }
+}
+
 
     async update(id: string, updateCategoryDto: UpdateCategoryDto) {
         try {

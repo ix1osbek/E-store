@@ -1,32 +1,42 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity, PrimaryGeneratedColumn, Column,
+  ManyToOne, JoinColumn
+} from 'typeorm';
 import { Category } from '../../category/entities/category.entity';
 
 @Entity()
 export class Computer {
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column()
-    name: string;
+  @Column()
+  name: string;
 
-    @Column('decimal', { precision: 10, scale: 2 })
-    price: number;
+  @Column('decimal', { precision: 10, scale: 2 })
+  price: number;
 
-    @Column()
-    processor: string;
+  @Column()
+  processor: string;
 
-    @Column()
-    ram: string;
+  @Column()
+  ram: string;
 
-    @Column()
-    storage: string;
+  @Column()
+  storage: string;
 
-    @Column()
-    gpu: string;
+  @Column()
+  gpu: string;
 
-    @Column()
-    img: string
+  @Column()
+  img: string;
 
-    @ManyToOne(() => Category, { eager: true, onDelete: 'SET NULL' })
-    category: Category;
+  @Column({ nullable: true })
+  categoryId: string;
+
+  @ManyToOne(() => Category, category => category.computers, {
+    eager: true,
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn({ name: 'categoryId' })
+  category: Category;
 }

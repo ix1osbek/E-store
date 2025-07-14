@@ -1,7 +1,6 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
-import { supabase } from '../common/supabase.client';
-import { v4 as uuid } from 'uuid';
-import { Express } from 'express';
+import { createSupabaseClient } from '../common/supabase.client';
+import { v4 as uuid } from 'uuid'
 
 @Injectable()
 export class UploadService {
@@ -21,7 +20,7 @@ export class UploadService {
       const ext = file.originalname.split('.').pop();
       const fileName = `${uuid()}.${ext}`;
 
-      const { error } = await supabase.storage
+      const { error } = await createSupabaseClient().storage
         .from(bucket)
         .upload(fileName, file.buffer, {
           contentType: file.mimetype,
@@ -29,7 +28,7 @@ export class UploadService {
 
       if (error) throw new BadRequestException(error.message);
 
-      const { data } = supabase.storage
+      const { data } = createSupabaseClient().storage
         .from(bucket)
         .getPublicUrl(fileName);
 
