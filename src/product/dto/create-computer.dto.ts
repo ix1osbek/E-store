@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty } from "class-validator";
+import { IsEnum, IsNotEmpty } from "class-validator";
+import { MemorySize } from "../entities/phone.entity";
 
 export class CreateComputerDto {
     @ApiProperty({ example: "Gaming PC" })
@@ -18,9 +19,9 @@ export class CreateComputerDto {
     @IsNotEmpty({ message: "RAM maydoni bo'sh bo'lishi mumkin emas!" })
     ram: string;
 
-    @ApiProperty({ example: "1TB SSD" })
-    @IsNotEmpty({ message: "Storage maydoni bo'sh bo'lishi mumkin emas!" })
-    storage: string;
+    @ApiProperty({ enum: MemorySize })
+    @IsEnum(MemorySize)
+    storage: MemorySize;
 
     @ApiProperty({ example: "NVIDIA RTX 3080" })
     @IsNotEmpty({ message: "GPU maydoni bo'sh bo'lishi mumkin emas!" })

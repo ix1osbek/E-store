@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty } from "class-validator";
+import { IsEnum, IsNotEmpty } from "class-validator";
+import { MemorySize } from "../entities/phone.entity";
 
 export class CreateGamingDto {
     @ApiProperty({ example: "Gaming Laptop" })
@@ -14,9 +15,10 @@ export class CreateGamingDto {
     @IsNotEmpty({ message: "Platform maydoni bo'sh bo'lishi mumkin emas!" })
     platform: string;
 
-    @ApiProperty({ example: "1TB SSD" })
-    @IsNotEmpty({ message: "Storage maydoni bo'sh bo'lishi mumkin emas!" })
-    storage: string;
+
+    @ApiProperty({ enum: MemorySize })
+    @IsEnum(MemorySize)
+    storage: MemorySize;
 
     @ApiProperty({ example: "Game A, Game B" })
     @IsNotEmpty({ message: "O'yinlar maydoni bo'sh bo'lishi mumkin emas!" })

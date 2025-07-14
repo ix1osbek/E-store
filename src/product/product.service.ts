@@ -1,10 +1,11 @@
-import { ConflictException, Injectable } from '@nestjs/common'
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
 import { CreateComputerDto } from './dto/create-computer.dto';
 import { Repository } from 'typeorm';
 import { Phone } from './entities/phone.entity';
 import { InjectRepository } from '@nestjs/typeorm'
 import { CreatePhoneDto } from './dto/create-phone.dto';
 import { UploadService } from '../upload/upload.service';
+import { UpdatePhoneDto } from './dto/update-phone-dto';
 
 @Injectable()
 export class ProductService {
@@ -36,19 +37,56 @@ export class ProductService {
         }
     }
 
-    findAll() {
-        return `This action returns all product`;
+    async findAllPhones() {
+        try {
+            if (!this.phoneRepository) {
+                throw new NotFoundException('Phone topilmadi');
+            }
+            return await this.phoneRepository.find()
+        } catch (error) {
+            if (error instanceof NotFoundException) throw error;
+            throw new Error('Serverda xato yuz berdi');
+        }
     }
 
-    findOne(id: number) {
-        return `This action returns a #${id} product`;
+    async findOnePhone(id: string) {
+        try {
+            const phone = await this.phoneRepository.findOne({ where: { id } });
+            if (!phone) {
+                throw new NotFoundException('Telefon topilmadi');
+            }
+            return phone;
+        } catch (error) {
+            if (error instanceof NotFoundException) throw error;
+            throw new Error('Serverda xato yuz berdi');
+        }
     }
 
-    update(id: number, updateProductDto: CreateComputerDto) {
-        return `This action updates a #${id} product`;
+    async updatePhone(id: string, updateProductDto: UpdatePhoneDto) {
+        try {
+            const phone = await this.phoneRepository.findOne({ where: { id } });
+            if (!phone) {
+                throw new NotFoundException('Telefon topilmadi');
+            }
+            await this.phoneRepository.update(id, updateProductDto);
+            return this.phoneRepository.findOne({ where: { id } });
+        } catch (error) {
+            if (error instanceof NotFoundException) throw error;
+            throw new Error('Serverda xato yuz berdi');
+        }
     }
 
-    remove(id: number) {
-        return `This action removes a #${id} product`;
+    async removePhone(id: string) {
+        try {
+            const phone = await this.phoneRepository.findOne({ where: { id } })
+            if (!phone) {
+                throw new NotFoundException('Telefon topilmadi')
+            }
+            await this.phoneRepository.delete(id)
+            return { message: 'Telefon muvaffaqiyatli o‘chirildi' }
+        } catch (error) {
+            if (error instanceof NotFoundException) throw error
+            throw new Error('Serverda xato yuz berdi')
+        }
     }
 }

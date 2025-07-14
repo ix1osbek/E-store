@@ -1,42 +1,54 @@
 import {
-  Entity, PrimaryGeneratedColumn, Column,
-  ManyToOne, JoinColumn
+    Entity, PrimaryGeneratedColumn, Column,
+    ManyToOne, JoinColumn,
+    CreateDateColumn,
+    UpdateDateColumn
 } from 'typeorm';
 import { Category } from '../../category/entities/category.entity';
+import { MemorySize } from './phone.entity';
 
 @Entity()
 export class Computer {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
 
-  @Column()
-  name: string;
+    @Column()
+    name: string;
 
-  @Column('decimal', { precision: 10, scale: 2 })
-  price: number;
+    @Column('decimal', { precision: 10, scale: 2 })
+    price: number;
 
-  @Column()
-  processor: string;
+    @Column()
+    processor: string;
 
-  @Column()
-  ram: string;
+    @Column()
+    ram: string;
 
-  @Column()
-  storage: string;
+    @Column({
+        type: 'enum',
+        enum: MemorySize,
+    })
+    storage: MemorySize;
 
-  @Column()
-  gpu: string;
+    @Column()
+    gpu: string;
 
-  @Column()
-  img: string;
+    @Column()
+    img: string;
 
-  @Column({ nullable: true })
-  categoryId: string;
+    @Column({ nullable: true })
+    categoryId: string;
 
-  @ManyToOne(() => Category, category => category.computers, {
-    eager: true,
-    onDelete: 'SET NULL',
-  })
-  @JoinColumn({ name: 'categoryId' })
-  category: Category;
+    @ManyToOne(() => Category, category => category.computers, {
+        eager: true,
+        onDelete: 'SET NULL',
+    })
+    @JoinColumn({ name: 'categoryId' })
+    category: Category;
+
+    @CreateDateColumn({ type: 'timestamptz' })
+    createdAt: Date;
+
+    @UpdateDateColumn({ type: 'timestamptz' })
+    updatedAt: Date;
 }

@@ -1,6 +1,5 @@
-// src/watch/dto/create-watch.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsNumber, IsUUID } from 'class-validator';
+import { IsString, IsNotEmpty, IsNumber } from 'class-validator';
 
 export class CreateWatchDto {
     @ApiProperty({ example: "Apple Watch Series 7" })
