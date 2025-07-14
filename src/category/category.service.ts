@@ -51,7 +51,7 @@ export class CategoryService {
         }
     }
 
-    async update(id: number, updateCategoryDto: UpdateCategoryDto) {
+    async update(id: string, updateCategoryDto: UpdateCategoryDto) {
         try {
             const category = await this.categoryRepository.findOne({ where: { id: id.toString() } });
             if (!category) {

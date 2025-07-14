@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Put } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -14,9 +14,9 @@ export class CategoryController {
 
     @Post("create")
     @UseGuards(AuthGuard("jwt"), RolesGuard)
-    @Roles(Role.SUPERADMIN)
+    @Roles(Role.SUPERADMIN, Role.ADMIN)
     @ApiOperation({ summary: 'Kategoriya yaratish' })
-    @ApiOperation({ summary: 'Faqat superadmin huquqi bor!' })
+    @ApiOperation({ summary: 'Faqat superadmin va admin huquqi bor!' })
     @ApiResponse({ status: 201, description: 'Kategoriya muvaffaqiyatli yaratildi' })
     @ApiResponse({ status: 409, description: 'Ushbu nomdagi kategoriya mavjud!' })
     @ApiResponse({ status: 500, description: 'Serverda xato yuz berdi' })
@@ -45,9 +45,18 @@ export class CategoryController {
         return this.categoryService.findOne(id);
     }
 
-    @Patch(':id')
+    @Put(':id/update')
+    @UseGuards(AuthGuard("jwt"), RolesGuard)
+    @Roles(Role.SUPERADMIN, Role.ADMIN)
+    @ApiOperation({ summary: 'Kategoriya ID bo‘yicha yangilash' })
+    @ApiOperation({ summary: 'Faqat superadmin va admin huquqi bor!' })
+    @ApiResponse({ status: 200, description: 'Kategoriya muvaffaqiyatli yangilandi' })
+    @ApiResponse({ status: 404, description: 'Kategoriya topilmadi' })
+    @ApiResponse({ status: 500, description: 'Serverda xato yuz berdi' })
+    @ApiResponse({ status: 400, description: 'Noto‘g‘ri so‘rov' })
+    @ApiResponse({ status: 409, description: 'Ushbu nomdagi kategoriya mavjud!' })
     update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
-        return this.categoryService.update(+id, updateCategoryDto);
+        return this.categoryService.update(id, updateCategoryDto);
     }
 
     @Delete(':id')
