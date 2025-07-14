@@ -35,9 +35,14 @@ export class CategoryController {
         return this.categoryService.findAll()
     }
 
-    @Get(':id')
+    @Get(':id/find')
+    @ApiOperation({ summary: 'Kategoriya ID bo‘yicha topish' })
+    @ApiResponse({ status: 200, description: 'Kategoriya muvaffaqiyatli topildi' })
+    @ApiResponse({ status: 404, description: 'Kategoriya topilmadi' })
+    @ApiResponse({ status: 500, description: 'Serverda xato yuz berdi' })
+    @ApiResponse({ status: 400, description: 'Noto‘g‘ri so‘rov' })
     findOne(@Param('id') id: string) {
-        return this.categoryService.findOne(+id);
+        return this.categoryService.findOne(id);
     }
 
     @Patch(':id')
