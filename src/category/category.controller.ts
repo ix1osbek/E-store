@@ -25,9 +25,14 @@ export class CategoryController {
     create(@Body() createCategoryDto: CreateCategoryDto) {
         return this.categoryService.create(createCategoryDto);
     }
-    @Get()
+    @Get("all")
+    @ApiOperation({ summary: 'Barcha kategoriyalarni olish' })
+    @ApiOperation({ summary: 'Barcha olishi mumkin!' })
+    @ApiResponse({ status: 200, description: 'Barcha kategoriyalar muvaffaqiyatli olindi' })
+    @ApiResponse({ status: 404, description: 'Kategoriyalar topilmadi' })
+    @ApiResponse({ status: 500, description: 'Serverda xato yuz berdi' })
     findAll() {
-        return this.categoryService.findAll();
+        return this.categoryService.findAll()
     }
 
     @Get(':id')
