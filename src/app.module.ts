@@ -7,12 +7,7 @@ import { Auth } from './auth/entities/auth.entity'
 import { CategoryModule } from './category/category.module';
 import { ProductModule } from './product/product.module';
 import { Category } from './category/entities/category.entity';
-import { Phone } from './product/entities/phone.entity';
-import { Watch } from './product/entities/watches.entity';
-import { Computer } from './product/entities/computer.entity';
-import { Camera } from './product/entities/camera.entity';
-import { Headphone } from './product/entities/headPhones.entity';
-import { Gaming } from './product/entities/gaming.entity';
+import { Product } from './product/entities/product.entity'
 import { UploadModule } from './upload/upload.module';
 
 @Module({
@@ -24,7 +19,7 @@ import { UploadModule } from './upload/upload.module';
             username: process.env.DB_USERNAME,
             password: process.env.DB_PASSWORD,
             database: process.env.DB_NAME,
-            entities: [Auth , Category , Phone , Watch , Computer , Camera, Headphone , Gaming],
+            entities: [Auth , Category , Product],
             synchronize: true,
       }),
       AuthModule,

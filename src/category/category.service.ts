@@ -42,7 +42,7 @@ export class CategoryService {
   try {
     const category = await this.categoryRepository.findOne({
       where: { id: id.toString() },
-      relations: ['phones', 'computers', 'cameras', 'headphones', 'watches', 'gamings'],
+      relations: ['product'],
     });
 
     if (!category) {
