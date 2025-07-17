@@ -9,6 +9,10 @@ import { ProductModule } from './product/product.module';
 import { Category } from './category/entities/category.entity';
 import { Product } from './product/entities/product.entity'
 import { UploadModule } from './upload/upload.module';
+import { RatingModule } from './rating/rating.module';
+import { CommentModule } from './comment/comment.module';
+import { Comment } from './comment/entities/comment.entity';
+import { Rating } from './rating/entities/rating.entity';
 
 @Module({
   imports: [ConfigModule.forRoot({envFilePath: '.env' , isGlobal: true}),
@@ -19,14 +23,16 @@ import { UploadModule } from './upload/upload.module';
             username: process.env.DB_USERNAME,
             password: process.env.DB_PASSWORD,
             database: process.env.DB_NAME,
-            entities: [Auth , Category , Product],
+            entities: [Auth , Category , Product , Comment , Rating],
             synchronize: true,
       }),
       AuthModule,
       EmailModule,
       CategoryModule,
       ProductModule,
-      UploadModule
+      UploadModule,
+      RatingModule,
+      CommentModule
   ],
   controllers: [],
   providers: [],

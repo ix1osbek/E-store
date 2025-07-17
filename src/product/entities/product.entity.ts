@@ -1,9 +1,12 @@
 import {
     Entity, PrimaryGeneratedColumn, Column,
     CreateDateColumn, UpdateDateColumn,
-    ManyToOne, JoinColumn
+    ManyToOne, JoinColumn,
+    OneToMany
 } from 'typeorm';
 import { Category } from '../../category/entities/category.entity';
+import { Rating } from 'src/rating/entities/rating.entity';
+import { Comment } from 'src/comment/entities/comment.entity';
 
 export enum MemorySize {
     GB32 = '32GB',
@@ -93,20 +96,22 @@ export class Product {
     image: string;
 
     @Column({ nullable: true })
-    categoryId: string;
+    categoryId: string
 
-    // @ManyToOne(() => Category, category => category.products, {
-    //     eager: true,
-    //     onDelete: 'SET NULL',
-    // })
-
-        @ManyToOne(() => Category, category => category.product, {
+    @ManyToOne(() => Category, category => category.product, {
         eager: true,
         onDelete: 'SET NULL',
     })
 
     @JoinColumn({ name: 'categoryId' })
     category: Category;
+
+    @OneToMany(() => Rating, (rating) => rating.product)
+    ratings: Rating[]
+
+    @OneToMany(() => Comment, (comment) => comment.product) 
+    comments: Comment[];
+
 
     @CreateDateColumn({ type: 'timestamptz' })
     createdAt: Date;

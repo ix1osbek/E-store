@@ -1,5 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Role } from '../role.enum';
+import { Rating } from 'src/rating/entities/rating.entity';
+import { Comment } from 'src/comment/entities/comment.entity'; // ✅ import qilingan
+
 @Entity()
 export class Auth {
     @PrimaryGeneratedColumn('uuid')
@@ -21,5 +24,11 @@ export class Auth {
     otpTime: Date;
 
     @Column({ type: 'enum', enum: Role, default: Role.USER })
-    role: Role
+    role: Role;
+
+    @OneToMany(() => Rating, (rating) => rating.user) 
+    ratings: Rating[];
+
+    @OneToMany(() => Comment, (comment) => comment.auth) 
+    comments: Comment[];
 }
