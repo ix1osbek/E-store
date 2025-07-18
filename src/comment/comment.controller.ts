@@ -46,7 +46,7 @@ export class CommentController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Commentni o‘chirish' })
-  remove(@Param('id') id: string) {
+  removeComment(@Param('id') id: string) {
     return this.commentService.remove(id);
   }
 }
