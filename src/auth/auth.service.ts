@@ -24,31 +24,47 @@ export class AuthService {
     //////////// register
     async register(createAuthDto: CreateAuthDto) {
         try {
-            const { email, password } = createAuthDto
+            const { email, password } = createAuthDto;
             const existingUser = await this.authRepository.findOne({ where: { email } });
-            if (existingUser) {
-                throw new ConflictException("Bu email bilan foydalanuvchi mavjud!")
-            }
 
-            const hashedPassword = await bcrypt.hash(password, 10)
+            const hashedPassword = await bcrypt.hash(password, 10);
             const otp = Math.floor(100000 + Math.random() * 900000).toString();
+            const now = new Date();
+
+            if (existingUser && !existingUser.isVerified) {
+                const diffMs = now.getTime() - new Date(existingUser.otpTime).getTime();
+                const diffMinutes = diffMs / (1000 * 60);
+
+                if (diffMinutes >= 2) {
+                    existingUser.password = hashedPassword;
+                    existingUser.otp = otp;
+                    existingUser.otpTime = now;
+                    await this.authRepository.save(existingUser);
+                    await this.emailService.sendEmailOtp(email, otp);
+                    return { message: "Yangi tasdiqlash kodingiz emailingizga yuborildi!" };
+                }
+                throw new ConflictException("Iltimos, 2 daqiqa kutib qayta urinib ko‘ring!");
+            }
+            if (existingUser && existingUser.isVerified) {
+                throw new ConflictException("Bu email bilan foydalanuvchi mavjud!");
+            }
 
             const newUser = this.authRepository.create({
                 email,
                 password: hashedPassword,
                 isVerified: false,
                 otp,
-                otpTime: new Date()
-            })
+                otpTime: now,
+            });
             await this.authRepository.save(newUser);
-            await this.emailService.sendEmailOtp(email, otp)
+            await this.emailService.sendEmailOtp(email, otp);
             return { message: "Iltimos emailingizga yuborilgan kodni kiriting!" };
         } catch (error) {
-            if (error instanceof ConflictException) throw error
+            if (error instanceof ConflictException) throw error;
             throw new InternalServerErrorException('Serverda xato yuz berdi');
-
         }
     }
+
 
     ///////////// send otp
     async verifyOtp(email: string, otp: string) {
@@ -141,7 +157,7 @@ export class AuthService {
             });
 
             const newAccessToken = this.jwtService.sign(
-                { id: payload.id, email: payload.email, role: payload.role }, 
+                { id: payload.id, email: payload.email, role: payload.role },
                 {
                     secret: process.env.JWT_ACCESS_SECRET,
                     expiresIn: '15m',
