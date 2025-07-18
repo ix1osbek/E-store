@@ -34,7 +34,7 @@ jobs:
           target: "~/nest-app"
 
       - name: Restart app via PM2
-        uses: aappleboy/ssh-action@master
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
