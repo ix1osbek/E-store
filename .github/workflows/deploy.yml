@@ -34,13 +34,14 @@ jobs:
           target: "~/nest-app"
 
       - name: Restart app via PM2
-        uses: appleboy/ssh-action@master
+        uses: aappleboy/ssh-action@master
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_KEY }}
           script: |
+            export PATH=$PATH:/root/.nvm/versions/node/v22.17.1/bin
             cd ~/nest-app
             npm install --omit=dev
             npm run build
-            pm2 restart nest-app || pm2 start dist/main.js --name nest-app
+            pm2 restart nest-app || pm2 start dist/main.js --name nest-app 
