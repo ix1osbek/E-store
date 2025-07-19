@@ -18,7 +18,7 @@ export class CategoryService {
             }
             const newCategory = this.categoryRepository.create(createCategoryDto)
             await this.categoryRepository.save(newCategory)
-            return { message: "Kategoriya yaratildi!" }
+            return { message: "Kategoriya yaratildiiii!" }
         } catch (error) {
             if (error instanceof ConflictException) throw error
             throw new InternalServerErrorException('Serverda xato yuz berdi');
