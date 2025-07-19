@@ -1,57 +1,60 @@
-# compiled output
-/dist
-/node_modules
-/build
+# Node modules
+node_modules/
+
+# Build output
+build/
+dist/
 
 # Logs
-logs
+logs/
 *.log
 npm-debug.log*
-pnpm-debug.log*
 yarn-debug.log*
-yarn-error.log*
+pnpm-debug.log*
 lerna-debug.log*
 
-# OS
+# OS files
 .DS_Store
+Thumbs.db
 
-# Tests
-/coverage
-/.nyc_output
-
-# IDEs and editors
-/.idea
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
-
-# IDE - VSCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-
-# dotenv environment variable files
-.env
-.env.development.local
-.env.test.local
-.env.production.local
-.env.local
-.env.example
-
-# temp directory
-.temp
-.tmp
+# Test coverage
+coverage/
+.nyc_output/
 
 # Runtime data
-pids
+pids/
 *.pid
 *.seed
 *.pid.lock
 
-# Diagnostic reports (https://nodejs.org/api/report.html)
+# Diagnostic reports
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# dotenv files (environment secrets)
+.env
+.env.*.local
+.env.local
+.env.example
+
+# Editor settings
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# System-specific files
+*.swp
+*.swo
+*.bak
+
+# PM2 logs and dumps
+.pids/
+dump.pm2.log
+*.pm2.log
+
+# Temporary files and folders
+tmp/
+temp/
+.cache/
+.tmp/
+.temp/
