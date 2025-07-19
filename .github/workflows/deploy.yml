@@ -43,5 +43,5 @@ jobs:
             export PATH=$PATH:/root/.nvm/versions/node/v22.17.1/bin
             cd ~/cyber-store
             npm install --omit=dev
-            npm run build
+            npx nest build
             pm2 restart nest-app || pm2 start dist/main.js --name nest-app 
