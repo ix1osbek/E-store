@@ -3,6 +3,7 @@ import { Role } from '../role.enum';
 import { Rating } from 'src/rating/entities/rating.entity';
 import { Comment } from 'src/comment/entities/comment.entity'; // ✅ import qilingan
 import { Like } from 'src/like/entities/like.entity';
+import { Cart } from 'src/cart/entities/cart.entity';
 
 @Entity()
 export class Auth {
@@ -35,4 +36,7 @@ export class Auth {
 
     @OneToMany(() => Like, like => like.auth)
     likes: Like[];
+
+    @OneToMany(() => Cart, (cart) => cart.auth)
+    cartItems: Cart[];
 }

@@ -8,6 +8,7 @@ import { Category } from '../../category/entities/category.entity';
 import { Rating } from 'src/rating/entities/rating.entity';
 import { Comment } from 'src/comment/entities/comment.entity';
 import { Like } from 'src/like/entities/like.entity';
+import { Cart } from 'src/cart/entities/cart.entity';
 
 export enum MemorySize {
     GB32 = '32GB',
@@ -114,6 +115,10 @@ export class Product {
     comments: Comment[];
     @OneToMany(() => Like, like => like.product)
     likes: Like[];
+
+    @OneToMany(() => Cart, (cart) => cart.product)
+    cartItems: Cart[];
+
 
     @CreateDateColumn({ type: 'timestamptz' })
     createdAt: Date;

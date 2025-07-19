@@ -15,6 +15,8 @@ import { Comment } from './comment/entities/comment.entity';
 import { Rating } from './rating/entities/rating.entity';
 import { LikeModule } from './like/like.module';
 import { Like } from './like/entities/like.entity';
+import { Cart } from './cart/entities/cart.entity';
+import { CartModule } from './cart/cart.module';
 
 @Module({
   imports: [ConfigModule.forRoot({envFilePath: '.env' , isGlobal: true}),
@@ -25,7 +27,7 @@ import { Like } from './like/entities/like.entity';
             username: process.env.DB_USERNAME,
             password: process.env.DB_PASSWORD,
             database: process.env.DB_NAME,
-            entities: [Auth , Category , Product , Comment , Rating , Like],
+            entities: [Auth , Category , Product , Comment , Rating , Like , Cart],
             synchronize: true,
       }),
       AuthModule,
@@ -35,7 +37,8 @@ import { Like } from './like/entities/like.entity';
       UploadModule,
       RatingModule,
       CommentModule,
-      LikeModule
+      LikeModule,
+      CartModule
   ],
   controllers: [],
   providers: [],

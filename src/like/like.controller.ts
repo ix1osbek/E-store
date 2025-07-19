@@ -9,7 +9,6 @@ import { ToggleLikeDto } from './dto/toggle-like.dto';
 @Controller('api/like')
 export class LikeController {
     constructor(private readonly likeService: LikeService) { }
-
     @Post('toggle')
     @UseGuards(AuthGuard('jwt'))
     @ApiOperation({ summary: 'Toggle like for a product' })
