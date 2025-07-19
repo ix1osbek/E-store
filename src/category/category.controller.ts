@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Put } fro
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Roles } from 'src/common/decorators/roles.decorator';
@@ -22,6 +22,7 @@ export class CategoryController {
     @ApiResponse({ status: 500, description: 'Serverda xato yuz berdi' })
     @ApiResponse({ status: 400, description: 'Noto‘g‘ri so‘rov' })
     @ApiResponse({ status: 404, description: 'Kategoriyalar topilmadi' })
+    @ApiBearerAuth()
     create(@Body() createCategoryDto: CreateCategoryDto) {
         return this.categoryService.create(createCategoryDto);
     }
