@@ -32,7 +32,7 @@ jobs:
           key: ${{ secrets.VPS_KEY }}
           port: 22
           source: "dist/*,package.json,package-lock.json"
-          target: "~/cyber-store"
+          target: "/var/www/cyber-store.uz"
 
       - name: SSH and deploy
         uses: appleboy/ssh-action@master
@@ -48,7 +48,7 @@ jobs:
               source "$NVM_DIR/nvm.sh"
             fi
 
-            cd ~/cyber-store
+            cd /var/www/cyber-store.uz
             git branch
             git pull origin main
 
