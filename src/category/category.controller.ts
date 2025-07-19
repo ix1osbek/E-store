@@ -4,8 +4,8 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from 'src/common/guards/roles.guard';
-import { Roles } from 'src/common/decorators/roles.decorator';
+import { RolesGuard } from 'src/common/guards/roles.guard'
+import { Roles } from 'src/common/decorators/roles.decorator'
 import { Role } from 'src/auth/role.enum';
 
 @Controller('api/category')
@@ -14,6 +14,7 @@ export class CategoryController {
 
     @Post("create")
     @UseGuards(AuthGuard("jwt"), RolesGuard)
+
     @Roles(Role.SUPERADMIN, Role.ADMIN)
     @ApiOperation({ summary: 'Kategoriya yaratish' })
     @ApiOperation({ summary: 'Faqat superadmin va admin huquqi bor!' })
