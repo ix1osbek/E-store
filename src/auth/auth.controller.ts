@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Param, Res, Req, Put } from '@nestjs/commo
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { VerifyOtpDto } from './dto/verify_otp.dto';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { UpdateAuthRoleDto } from './dto/update-authRole.dto';
 import { SendResetDto } from './dto/send-reset.dto';
@@ -84,6 +84,7 @@ export class AuthController {
     @ApiResponse({ status: 200, description: 'Foydalanuvchilar ro‘yxati' })
     @ApiResponse({ status: 404, description: 'Foydalanuvchilar topilmadi' })
     @ApiResponse({ status: 500, description: 'Serverda xato yuz berdi' })
+    @ApiBearerAuth()
     async getAllUsers() {
         return this.authService.getAllUsers();
     }
@@ -96,6 +97,7 @@ export class AuthController {
     @ApiResponse({ status: 200, description: 'Foydalanuvchining roli yangilandi' })
     @ApiResponse({ status: 403, description: 'Ruxsat yo‘q (superadmin emas)' })
     @ApiResponse({ status: 404, description: 'Foydalanuvchi topilmadi' })
+    @ApiBearerAuth()
     async updateUserRole(
         @Param('id') id: string,
         @Body() updateAuthDto: UpdateAuthRoleDto,

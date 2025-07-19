@@ -56,6 +56,7 @@ export class CategoryController {
     @ApiResponse({ status: 500, description: 'Serverda xato yuz berdi' })
     @ApiResponse({ status: 400, description: 'Noto‘g‘ri so‘rov' })
     @ApiResponse({ status: 409, description: 'Ushbu nomdagi kategoriya mavjud!' })
+    @ApiBearerAuth()
     update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
         return this.categoryService.update(id, updateCategoryDto);
     }
@@ -71,6 +72,7 @@ export class CategoryController {
     @ApiResponse({ status: 400, description: 'Noto‘g‘ri so‘rov' })
     @ApiResponse({ status: 409, description: 'Ushbu nomdagi kategoriya mavjud!' })
     @ApiResponse({ status: 401, description: 'Ruxsat etilmagan' })
+    @ApiBearerAuth()
     remove(@Param('id') id: string) {
         return this.categoryService.remove(id);
     }

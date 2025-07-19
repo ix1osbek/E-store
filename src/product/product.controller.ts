@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFiles, UseIn
 import { ProductService } from './product.service'
 import { CreateProductDto } from './dto/create-product.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { ApiBody, ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Roles } from 'src/common/decorators/roles.decorator';
@@ -28,6 +28,7 @@ export class ProductController {
     @ApiResponse({ status: 500, description: 'Serverda xato yuz berdi' })
     @ApiResponse({ status: 400, description: 'Noto‘g‘ri so‘rov' })
     @ApiResponse({ status: 404, description: 'Kategoriyalar topilmadi' })
+    @ApiBearerAuth()
     async createProduct(
         @Body() createProductDto: CreateProductDto,
         @UploadedFiles() file: Express.Multer.File[],
@@ -62,6 +63,7 @@ export class ProductController {
     @ApiResponse({ status: 404, description: 'product topilmadi' })
     @ApiResponse({ status: 500, description: 'Serverda xato yuz berdi' })
     @ApiResponse({ status: 400, description: 'Noto‘g‘ri so‘rov' })
+    @ApiBearerAuth()
     @ApiBody({
         type: UpdateProductDto,
         description: 'Yangilash uchun product ma\'lumotlari',
@@ -80,6 +82,7 @@ export class ProductController {
     @ApiResponse({ status: 500, description: 'Serverda xato yuz berdi' })
     @ApiResponse({ status: 400, description: 'Noto‘g‘ri so‘rov' })
     @ApiResponse({ status: 401, description: 'Ruxsat etilmagan' })
+    @ApiBearerAuth()
     async remove(@Param('id') id: string) {
         return this.productService.removeproduct(id)
     }
