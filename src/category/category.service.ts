@@ -16,9 +16,9 @@ export class CategoryService {
             if (foundCategory) {
                 throw new ConflictException("Ushbu nomdagi kategoriya mavjud!");
             }
-            const newCategory = this.categoryRepository.create(createCategoryDto);
-            await this.categoryRepository.save(newCategory);
-            return { message: "Kategoriya yaratildi!" };
+            const newCategory = this.categoryRepository.create(createCategoryDto)
+            await this.categoryRepository.save(newCategory)
+            return { message: "Kategoriya yaratildi!" }
         } catch (error) {
             if (error instanceof ConflictException) throw error
             throw new InternalServerErrorException('Serverda xato yuz berdi');
