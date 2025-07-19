@@ -34,7 +34,7 @@ jobs:
           source: "dist/*,package.json,package-lock.json"
           target: "~/cyber-store"
 
-      - name: Restart PM2 app on VPS
+      - name: SSH and deploy
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -42,6 +42,24 @@ jobs:
           key: ${{ secrets.VPS_KEY }}
           port: 22
           script: |
+            # NVM orqali node o‘rnatilgan bo‘lsa, uni faollashtiramiz
+            if [ -s "$HOME/.nvm/nvm.sh" ]; then
+              export NVM_DIR="$HOME/.nvm"
+              source "$NVM_DIR/nvm.sh"
+            fi
+
             cd ~/cyber-store
+
+            # npm va pm2 mavjudligini tekshirish
+            if ! command -v npm &> /dev/null; then
+              echo "❌ npm topilmadi. VPSda to'g'ri o'rnatilmagan."
+              exit 1
+            fi
+
+            if ! command -v pm2 &> /dev/null; then
+              echo "⚠️ pm2 topilmadi. O'rnatilmoqda..."
+              npm install -g pm2
+            fi
+
             npm install --omit=dev
             pm2 restart cyber-store || pm2 start dist/main.js --name cyber-store
