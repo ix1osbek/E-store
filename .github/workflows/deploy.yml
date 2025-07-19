@@ -33,3 +33,15 @@ jobs:
           port: 22
           source: "dist/*,package.json,package-lock.json"
           target: "~/cyber-store"
+
+      - name: Restart PM2 app on VPS
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_KEY }}
+          port: 22
+          script: |
+            cd ~/cyber-store
+            npm install --omit=dev
+            pm2 restart cyber-store || pm2 start dist/main.js --name cyber-store
