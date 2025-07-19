@@ -29,7 +29,7 @@ export class CategoryService {
         try {
             const categories = await this.categoryRepository.find();
             if (!categories || categories.length === 0) {
-                throw new NotFoundException('Kategoriyalar topilmadi');
+                throw new NotFoundException('Kategoriyalar topilmadi , iltimos birozdan so"ng qayta urinib ko"ring!');
             }
             return categories;
         } catch (error) {
@@ -39,22 +39,22 @@ export class CategoryService {
     }
 
     async findOne(id: string) {
-  try {
-    const category = await this.categoryRepository.findOne({
-      where: { id: id.toString() },
-      relations: ['product'],
-    });
+        try {
+            const category = await this.categoryRepository.findOne({
+                where: { id: id.toString() },
+                relations: ['product'],
+            });
 
-    if (!category) {
-      throw new NotFoundException(`Kategoriya #${id} topilmadi`);
+            if (!category) {
+                throw new NotFoundException(`Kategoriya #${id} topilmadi`);
+            }
+
+            return category;
+        } catch (error) {
+            if (error instanceof NotFoundException) throw error;
+            throw new InternalServerErrorException('Serverda xato yuz berdi');
+        }
     }
-
-    return category;
-  } catch (error) {
-    if (error instanceof NotFoundException) throw error;
-    throw new InternalServerErrorException('Serverda xato yuz berdi');
-  }
-}
 
 
     async update(id: string, updateCategoryDto: UpdateCategoryDto) {
