@@ -49,6 +49,7 @@ jobs:
             fi
 
             cd ~/cyber-store
+            git branch
             git pull origin main
 
             # npm va pm2 mavjudligini tekshirish
