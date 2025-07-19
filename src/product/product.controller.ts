@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFiles, UseInterceptors, UseGuards, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFiles, UseInterceptors, UseGuards, Put, Query } from '@nestjs/common';
 import { ProductService } from './product.service'
 import { CreateProductDto } from './dto/create-product.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Roles } from 'src/common/decorators/roles.decorator';
@@ -85,5 +85,13 @@ export class ProductController {
     @ApiBearerAuth()
     async remove(@Param('id') id: string) {
         return this.productService.removeproduct(id)
+    }
+
+
+    @Get('search')
+    @ApiOperation({ summary: 'Search products by name or description' })
+    @ApiQuery({ name: 'q', required: true, example: 'iPhone', description: 'Search keyword' })
+    async searchProducts(@Query('q') query: string) {
+        return this.productService.searchProducts(query);
     }
 }

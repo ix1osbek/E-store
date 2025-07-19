@@ -1,5 +1,5 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
-import { Repository } from 'typeorm';
+import { ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common'
+import { ILike, Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm'
 import { CreateProductDto } from './dto/create-product.dto';
@@ -29,11 +29,9 @@ export class ProductService {
             });
             return await this.ProductRepository.save(newPhone)
         } catch (error) {
-            console.log(error);
-            
             if (error instanceof ConflictException) throw error;
-            throw new Error('Serverda xato yuz berdi' );
-            
+            throw new Error('Serverda xato yuz berdi');
+
         }
     }
 
@@ -97,6 +95,20 @@ export class ProductService {
         } catch (error) {
             if (error instanceof NotFoundException) throw error
             throw new Error('Serverda xato yuz berdi')
+        }
+    }
+
+    async searchProducts(query: string): Promise<Product[]> {
+        try {
+            return this.ProductRepository.find({
+                where: [
+                    { title: ILike(`%${query}%`) },
+                    { description: ILike(`%${query}%`) },
+                ],
+                relations: ['category'],
+            });
+        } catch (error) {
+            throw new InternalServerErrorException({ message: "serverda xatolik yuz berdi!" })
         }
     }
 }
