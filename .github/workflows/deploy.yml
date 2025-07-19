@@ -41,7 +41,7 @@ jobs:
           key: ${{ secrets.VPS_KEY }}
           script: |
             export PATH=$PATH:/root/.nvm/versions/node/v22.17.1/bin
-            cd ~/nest-app
+            cd ~/cyber-store
             npm install --omit=dev
             npm run build
             pm2 restart nest-app || pm2 start dist/main.js --name nest-app 
