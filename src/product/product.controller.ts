@@ -96,7 +96,6 @@ export class ProductController {
         return this.productService.searchProducts(query);
     }
 
-
     @Get('filter')
     @ApiOperation({ summary: 'Filterlash — model, xotira, narx va boshqalar bo‘yicha' })
     filterProducts(@Query() filterDto: FilterProductDto) {
