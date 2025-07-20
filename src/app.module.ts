@@ -19,31 +19,34 @@ import { Cart } from './cart/entities/cart.entity';
 import { CartModule } from './cart/cart.module';
 import { AboutModule } from './about/about.module';
 import { About } from './about/entities/about.entity';
+import { ContactModule } from './contact/contact.module';
+import { Contact } from './contact/entities/contact.entity';
 
 @Module({
-  imports: [ConfigModule.forRoot({envFilePath: '.env' , isGlobal: true}),
-      TypeOrmModule.forRoot({
-            type: 'postgres',
-            host: process.env.DB_HOST,
-            port: Number(process.env.DB_PORT),
-            username: process.env.DB_USERNAME,
-            password: process.env.DB_PASSWORD,
-            database: process.env.DB_NAME,
-            entities: [Auth , Category , Product , Comment , Rating , Like , Cart , About],
-            synchronize: true,
-      }),
-      AuthModule,
-      EmailModule,
-      CategoryModule,
-      ProductModule,
-      UploadModule,
-      RatingModule,
-      CommentModule,
-      LikeModule,
-      CartModule,
-      AboutModule
-  ],
-  controllers: [],
-  providers: [],
+    imports: [ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
+    TypeOrmModule.forRoot({
+        type: 'postgres',
+        host: process.env.DB_HOST,
+        port: Number(process.env.DB_PORT),
+        username: process.env.DB_USERNAME,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME,
+        entities: [Auth, Category, Product, Comment, Rating, Like, Cart, About, Contact],
+        synchronize: true,
+    }),
+        AuthModule,
+        EmailModule,
+        CategoryModule,
+        ProductModule,
+        UploadModule,
+        RatingModule,
+        CommentModule,
+        LikeModule,
+        CartModule,
+        AboutModule,
+        ContactModule
+    ],
+    controllers: [],
+    providers: [],
 })
-export class AppModule {}
+export class AppModule { }
