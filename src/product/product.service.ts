@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { CreateProductDto } from './dto/create-product.dto';
 import { UploadService } from '../upload/upload.service'
 import { UpdateProductDto } from './dto/update-product.dto';
+import { FilterProductDto } from './dto/filter-product.dto';
 
 @Injectable()
 export class ProductService {
@@ -111,4 +112,73 @@ export class ProductService {
             throw new InternalServerErrorException({ message: "serverda xatolik yuz berdi!" })
         }
     }
+
+
+
+    /////////////// filter
+
+
+    async filterProducts(filterDto: FilterProductDto): Promise<Product[]> {
+        try {
+            const {
+                model,
+                brand,
+                color,
+                memory,
+                storageType,
+                storageCapacity,
+                type,
+                minPrice,
+                maxPrice,
+                categoryId,
+            } = filterDto;
+
+            const query = this.ProductRepository.createQueryBuilder('product');
+
+            if (model) {
+                query.andWhere('product.model ILIKE :model', { model: `%${model}%` });
+            }
+
+            if (brand) {
+                query.andWhere('product.brand ILIKE :brand', { brand: `%${brand}%` });
+            }
+
+            if (color) {
+                query.andWhere('product.color ILIKE :color', { color: `%${color}%` });
+            }
+
+            if (memory) {
+                query.andWhere('product.memory = :memory', { memory });
+            }
+
+            if (storageType) {
+                query.andWhere('product.storageType = :storageType', { storageType });
+            }
+
+            if (storageCapacity) {
+                query.andWhere('product.storageCapacity = :storageCapacity', { storageCapacity });
+            }
+
+            if (type) {
+                query.andWhere('product.type = :type', { type });
+            }
+
+            if (minPrice) {
+                query.andWhere('product.price >= :minPrice', { minPrice });
+            }
+
+            if (maxPrice) {
+                query.andWhere('product.price <= :maxPrice', { maxPrice });
+            }
+
+            if (categoryId) {
+                query.andWhere('product.categoryId = :categoryId', { categoryId });
+            }
+
+            return await query.getMany();
+        } catch (error) {
+            throw new InternalServerErrorException({ message: "serverda xatolik yuz berdi!" })
+        }
+    }
+
 }

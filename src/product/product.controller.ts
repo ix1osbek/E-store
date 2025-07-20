@@ -8,6 +8,7 @@ import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'src/auth/role.enum';
 import { UpdateProductDto } from "./dto/update-product.dto"
+import { FilterProductDto } from './dto/filter-product.dto';
 
 @Controller('api/product')
 export class ProductController {
@@ -93,5 +94,12 @@ export class ProductController {
     @ApiQuery({ name: 'q', required: true, example: 'iPhone', description: 'Search keyword' })
     async searchProducts(@Query('q') query: string) {
         return this.productService.searchProducts(query);
+    }
+
+
+    @Get('filter')
+    @ApiOperation({ summary: 'Filterlash — model, xotira, narx va boshqalar bo‘yicha' })
+    filterProducts(@Query() filterDto: FilterProductDto) {
+        return this.productService.filterProducts(filterDto);
     }
 }
