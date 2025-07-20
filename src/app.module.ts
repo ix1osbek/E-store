@@ -21,6 +21,8 @@ import { AboutModule } from './about/about.module';
 import { About } from './about/entities/about.entity';
 import { ContactModule } from './contact/contact.module';
 import { Contact } from './contact/entities/contact.entity';
+import { BlogModule } from './blog/blog.module';
+import { Blog } from './blog/entities/blog.entity';
 
 @Module({
     imports: [ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
@@ -31,7 +33,7 @@ import { Contact } from './contact/entities/contact.entity';
         username: process.env.DB_USERNAME,
         password: process.env.DB_PASSWORD,
         database: process.env.DB_NAME,
-        entities: [Auth, Category, Product, Comment, Rating, Like, Cart, About, Contact],
+        entities: [Auth, Category, Product, Comment, Rating, Like, Cart, About, Contact , Blog],
         synchronize: true,
     }),
         AuthModule,
@@ -44,7 +46,8 @@ import { Contact } from './contact/entities/contact.entity';
         LikeModule,
         CartModule,
         AboutModule,
-        ContactModule
+        ContactModule,
+        BlogModule
     ],
     controllers: [],
     providers: [],

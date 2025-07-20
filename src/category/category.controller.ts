@@ -65,6 +65,7 @@ export class CategoryController {
     @Delete(':id/delete')
     @UseGuards(AuthGuard("jwt"), RolesGuard)
     @Roles(Role.SUPERADMIN, Role.ADMIN)
+    @ApiBearerAuth()
     @ApiOperation({ summary: 'Kategoriya ID bo‘yicha o‘chirish' })
     @ApiOperation({ summary: 'Faqat superadmin va admin huquqi bor!' })
     @ApiResponse({ status: 200, description: 'Kategoriya muvaffaqiyatli o‘chirildi' })
@@ -73,7 +74,6 @@ export class CategoryController {
     @ApiResponse({ status: 400, description: 'Noto‘g‘ri so‘rov' })
     @ApiResponse({ status: 409, description: 'Ushbu nomdagi kategoriya mavjud!' })
     @ApiResponse({ status: 401, description: 'Ruxsat etilmagan' })
-    @ApiBearerAuth()
     remove(@Param('id') id: string) {
         return this.categoryService.remove(id);
     }
