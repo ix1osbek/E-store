@@ -15,7 +15,7 @@ export class BlogService {
         const blog = this.blogRepo.create(dto);
         return this.blogRepo.save(blog);
     }
-
+    
     async findAll(): Promise<Blog[]> {
         return this.blogRepo.find({ order: { createdAt: 'DESC' } });
     }
